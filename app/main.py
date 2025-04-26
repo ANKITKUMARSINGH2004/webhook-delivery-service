@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends
 from app import models, crud, schemas, tasks, cache, utils
 from app.database import engine, SessionLocal
 from fastapi.middleware.cors import CORSMiddleware

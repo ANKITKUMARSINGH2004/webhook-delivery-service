@@ -96,6 +96,40 @@ curl "http://localhost:8000/subscriptions/1/deliveries"
 
 ---
 
+## 🎨 Why This Design?
+
+- **FastAPI**: Lightweight, fast, and comes with built-in automatic Swagger documentation.
+- **Celery**: Best for managing background asynchronous tasks and retrying failed webhook deliveries.
+- **Redis**: Perfect as both a broker (queue) and cache layer — high-speed and lightweight.
+- **PostgreSQL**: Reliable SQL database, optimized for transactional logging and indexing.
+- **Docker + docker-compose**: Ensures smooth, isolated development and production deployments.
+- **Retry Mechanism**: Exponential backoff ensures not overloading target systems while maintaining delivery reliability.
+- **Signature Verification**: Adds security to ensure payload authenticity if a secret is provided.
+- **Event Filtering**: Supports efficient event-driven architecture if needed by the client systems.
+
+---
+
+## 🔮 Future Improvements
+
+- Implement rate limiting per subscription to prevent webhook flooding.
+- Add dynamic webhook delivery headers based on subscription preferences.
+- Implement real-time WebSocket monitoring for delivery status.
+- Add detailed metrics (Prometheus + Grafana) for operational visibility.
+- Support batch ingestion of multiple webhooks for better throughput.
+
+---
+
+## ✅ Testing
+
+- Unit tests created for subscription management, webhook ingestion, and retry mechanisms.
+- To run tests (example command):
+
+```bash
+docker-compose run api pytest
+```
+
+---
+
 ## ⚡ Deployment (Optional)
 
 You can deploy easily on **Render.com** (Free tier):
@@ -136,3 +170,4 @@ You can deploy easily on **Render.com** (Free tier):
 - Celery documentation
 - Redis documentation
 - SQLAlchemy documentation
+

@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends
+from fastapi.responses import RedirectResponse
 from app import models, crud, schemas, tasks, cache, utils
 from app.database import engine, SessionLocal
 from fastapi.middleware.cors import CORSMiddleware
@@ -69,4 +70,8 @@ def get_delivery_status(task_id: str, db: Session = Depends(get_db)):
 @app.get("/subscriptions/{subscription_id}/deliveries", response_model=List[schemas.DeliveryLogOut])
 def get_subscription_deliveries(subscription_id: int, db: Session = Depends(get_db)):
     return crud.get_latest_deliveries(db, subscription_id)
+
+@app.get("/", include_in_schema=False)
+def root_redirect():
+    return RedirectResponse(url="/docs")
 

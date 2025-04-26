@@ -35,5 +35,9 @@ Built with **FastAPI**, **Celery**, **Redis**, **PostgreSQL**, and **Docker**.
 1. **Clone Repository**
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/webhook-delivery-service.git
+git clone https://github.com/ANKITKUMARSINGH2004/webhook-delivery-service.git
 cd webhook-delivery-service
+
+2. **Set Environment Variables**
+cp .env.example .env
+

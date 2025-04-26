@@ -28,27 +28,27 @@ def get_db():
         db.close()
 
 @app.post("/subscriptions/", response_model=schemas.SubscriptionOut)
-def create_subscription(subscription: schemas.SubscriptionCreate, db: Session = next(get_db())):
+def create_subscription(subscription: schemas.SubscriptionCreate, db: Session = Depends(get_db)):
     return crud.create_subscription(db, subscription)
 
 @app.get("/subscriptions/{subscription_id}", response_model=schemas.SubscriptionOut)
-def read_subscription(subscription_id: int, db: Session = next(get_db())):
+def read_subscription(subscription_id: int, db: Session = Depends(get_db)):
     db_subscription = crud.get_subscription(db, subscription_id)
     if db_subscription is None:
         raise HTTPException(status_code=404, detail="Subscription not found")
     return db_subscription
 
 @app.put("/subscriptions/{subscription_id}", response_model=schemas.SubscriptionOut)
-def update_subscription(subscription_id: int, subscription: schemas.SubscriptionUpdate, db: Session = next(get_db())):
+def update_subscription(subscription_id: int, subscription: schemas.SubscriptionUpdate, db: Session = Depends(get_db)):
     return crud.update_subscription(db, subscription_id, subscription)
 
 @app.delete("/subscriptions/{subscription_id}")
-def delete_subscription(subscription_id: int, db: Session = next(get_db())):
+def delete_subscription(subscription_id: int, db: Session = Depends(get_db)):
     crud.delete_subscription(db, subscription_id)
     return {"message": "Subscription deleted"}
 
 @app.post("/ingest/{subscription_id}")
-def ingest_webhook(subscription_id: int, background_tasks: BackgroundTasks, payload: dict, db: Session = next(get_db()), event_type: str = None):
+def ingest_webhook(subscription_id: int, background_tasks: BackgroundTasks, payload: dict, db: Session = Depends(get_db), event_type: str = None):
     subscription = cache.get_subscription(subscription_id) or crud.get_subscription(db, subscription_id)
     if not subscription:
         raise HTTPException(status_code=404, detail="Subscription not found")
@@ -63,10 +63,10 @@ def ingest_webhook(subscription_id: int, background_tasks: BackgroundTasks, payl
     return {"message": "Webhook queued for delivery", "task_id": task_id}
 
 @app.get("/status/{task_id}")
-def get_delivery_status(task_id: str, db: Session = next(get_db())):
+def get_delivery_status(task_id: str, db: Session = Depends(get_db)):
     return crud.get_delivery_status(db, task_id)
 
 @app.get("/subscriptions/{subscription_id}/deliveries", response_model=List[schemas.DeliveryLogOut])
-def get_subscription_deliveries(subscription_id: int, db: Session = next(get_db())):
+def get_subscription_deliveries(subscription_id: int, db: Session = Depends(get_db)):
     return crud.get_latest_deliveries(db, subscription_id)
 

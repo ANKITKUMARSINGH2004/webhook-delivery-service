@@ -75,25 +75,37 @@ docker-compose up --build
 ### Create a Subscription
 
 ```bash
-curl -X POST "https://webhook-delivery-service-9.onrender.com" -H "Content-Type: application/json" -d '{"target_url":"http://example.com/webhook","secret":"your_secret_key","event_type":"order.created"}'
+curl -X POST "https://webhook-delivery-service-9.onrender.com/subscriptions/" \
+-H "Content-Type: application/json" \
+-d '{
+  "target_url": "https://example-client.com/webhook",
+  "secret": "your_secret_key",
+  "event_type": "order.created"
+}'
 ```
 
 ### Ingest Webhook
 
 ```bash
-curl -X POST "https://webhook-delivery-service-9.onrender.com" -H "Content-Type: application/json" -d '{"body":"payload_content","signature":"computed_signature"}'
+curl -X POST "https://webhook-delivery-service-9.onrender.com/ingest/1" \
+-H "Content-Type: application/json" \
+-H "X-Event-Type: order.created" \
+-d '{
+  "body": "payload_content",
+  "signature": "computed_signature"
+}'
 ```
 
 ### Get Delivery Status
 
 ```bash
-curl "https://webhook-delivery-service-9.onrender.com/status/{task_id}"
+curl -X GET "https://webhook-delivery-service-9.onrender.com/status/{task_id}"
 ```
 
 ### List Recent Deliveries for a Subscription
 
 ```bash
-curl "https://webhook-delivery-service-9.onrender.com/subscriptions/1/deliveries"
+curl -X GET "https://webhook-delivery-service-9.onrender.com/subscriptions/1/deliveries"
 ```
 
 ---
